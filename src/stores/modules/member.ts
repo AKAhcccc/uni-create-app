@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { defineStore } from 'pinia'
 
 // 定义 Store
 export const useMemberStore = defineStore(
@@ -27,6 +27,15 @@ export const useMemberStore = defineStore(
   },
   // TODO: 持久化
   {
-    persist: true,
+    persist: {
+      storage: {
+        getItem(key: any) {
+          return uni.getStorageSync(key)
+        },
+        setItem(key: any, value: any) {
+          uni.setStorageSync(key, value)
+        },
+      },
+    },
   },
 )
