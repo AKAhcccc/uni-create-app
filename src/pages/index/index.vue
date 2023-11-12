@@ -12,6 +12,7 @@ import HotPanel from '@/pages/index/components/HotPanel.vue'
 import { onLoad } from '@dcloudio/uni-app'
 // 引入数据类型
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
+import type { XtxGuessInstance } from '@/components/components'
 
 // 接受轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -40,22 +41,40 @@ onLoad(() => {
   getHomeCategoryData()
   getHomeHot()
 })
+// 获取猜你喜欢组件实例
+const guessRef = ref<XtxGuessInstance>()
+
+// 滚动触底
+const onScrolltolower = () => {
+  console.log('滚动触底')
+  guessRef.value?.getMore()
+}
 </script>
 
 <template>
   <!-- 自定义导航组件 -->
   <CustomNavbar />
-  <!-- 轮播图组件 -->
-  <XtxSwiper :list="bannerList" />
-  <!-- 分类组件 -->
-  <CategoryPanel :list="categoryList" />
-  <!-- 热门推荐组件 -->
-  <HotPanel :list="HotPanelList" />
-  <view class="index">index</view>
+  <!-- 滚动容器 -->
+  <scroll-view @scrolltolower="onScrolltolower" class="scroll-view" scroll-y>
+    <!-- 轮播图组件 -->
+    <XtxSwiper :list="bannerList" />
+    <!-- 分类组件 -->
+    <CategoryPanel :list="categoryList" />
+    <!-- 热门推荐组件 -->
+    <HotPanel :list="HotPanelList" />
+    <!-- 猜你喜欢模块 -->
+    <XtxGuess ref="guessRef" />
+  </scroll-view>
 </template>
 
 <style lang="scss">
 page {
   background-color: #f7f7f7;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .scroll-view {
+    flex: 1;
+  }
 }
 </style>
